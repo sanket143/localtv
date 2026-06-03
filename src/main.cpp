@@ -1,7 +1,4 @@
 #include <SDL3/SDL.h>
-#include <SDL3/SDL_events.h>
-#include <SDL3/SDL_hints.h>
-#include <SDL3/SDL_init.h>
 #include <mpv/client.h>
 #include <mpv/render_gl.h>
 #include <print>
@@ -47,7 +44,7 @@ int main() {
   mpv_set_option_string(ctx, "audio-client-name",
                         "stv"); // show correct icon in e.g. pavucontrol
   mpv_set_option_string(ctx, "vo", "libmpv");
-  mpv_request_log_messages(ctx, "debug");
+  // mpv_request_log_messages(ctx, "debug");
 
   if (mpv_initialize(ctx) < 0) {
     std::println("Could not initialize mpv");
@@ -55,7 +52,7 @@ int main() {
 
   SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
 
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+  if (!SDL_Init(SDL_INIT_VIDEO)) {
     die("Could not initialize SDL3");
   }
 
@@ -120,10 +117,12 @@ int main() {
   mpv_render_context_set_update_callback(mpv_gl, on_mpv_render_update, NULL);
 
   // Play this file.
-  const char *cmd[] = {"loadfile",
-                       "https://www.youtube.com/watch?v=iqddnwKF8HQ", NULL};
+  const char *loadfile_cmd[] = {
+      "loadfile", "https://www.youtube.com/watch?v=N7n0ZBU68Aw", NULL};
+  const char *mute_cmd[] = {"cycle", "mute", NULL};
 
-  mpv_command_async(ctx, 0, cmd);
+  mpv_command(ctx, loadfile_cmd);
+  mpv_command(ctx, mute_cmd);
 
   std::println("Success: mpv context created");
 
@@ -161,6 +160,7 @@ int main() {
         }
       }
     }
+
     if (redraw) {
       int w, h;
       SDL_GetWindowSize(window, &w, &h);
