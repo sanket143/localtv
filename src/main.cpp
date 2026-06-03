@@ -1,3 +1,4 @@
+#include "db.h"
 #include <SDL3/SDL.h>
 #include <mpv/client.h>
 #include <mpv/render_gl.h>
@@ -29,6 +30,12 @@ static void *get_proc_address_mpv(void *fn_ctx, const char *name) {
 }
 
 int main() {
+  DB db;
+  char filename[] = "data.db\0";
+  char sql[] = "create table if not exists hello(id int);";
+  db.init(filename);
+  db.run(sql);
+
   mpv_handle *ctx = mpv_create();
 
   if (!ctx) {
@@ -118,7 +125,7 @@ int main() {
 
   // Play this file.
   const char *loadfile_cmd[] = {
-      "loadfile", "https://www.youtube.com/watch?v=N7n0ZBU68Aw", NULL};
+      "loadfile", "https://www.youtube.com/watch?v=QyGbnE-RHKA", NULL};
   const char *mute_cmd[] = {"cycle", "mute", NULL};
 
   mpv_command(ctx, loadfile_cmd);
