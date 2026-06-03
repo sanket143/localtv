@@ -1,13 +1,11 @@
 #include "db.h"
+#include <filesystem>
 #include <fstream>
 #include <print>
 #include <sstream>
 
-int main() {
-  DB db;
-  db.init(const_cast<char *>("data.db"));
-
-  std::ifstream migration_file("./migrations/0001-create-channels-table.sql");
+int read_and_execute_sql_file(DB *db, char *filename) {
+  std::ifstream migration_file(filename);
 
   if (!migration_file.is_open()) {
     std::println(stderr, "Error opening the file!");
@@ -21,7 +19,24 @@ int main() {
 
   std::println(stdout, "{}", content);
 
-  db.run(content.data());
+  db->run(content.data());
+
+  return 0;
+}
+
+int main() {
+  std::string path = "./migrations";
+
+  DB db(const_cast<char *>("data.db"));
+
+  try {
+    for (const auto &entry :
+         std::filesystem::recursive_directory_iterator(path)) {
+      read_and_execute_sql_file(&db, entry.path().string().data());
+    }
+  } catch (const std::filesystem::filesystem_error &e) {
+    std::println(stderr, "{}", e.what());
+  }
 
   return 0;
 }

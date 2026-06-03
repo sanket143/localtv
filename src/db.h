@@ -5,6 +5,6 @@ private:
   sqlite3 *conn;
 
 public:
-  void init(const char *filename);
-  void run(const char *sql);
+  DB(const char *filename);
+  int run(const char *sql);
 };

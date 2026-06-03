@@ -30,10 +30,9 @@ static void *get_proc_address_mpv(void *fn_ctx, const char *name) {
 }
 
 int main() {
-  DB db;
-  char filename[] = "data.db\0";
   char sql[] = "create table if not exists hello(id int);";
-  db.init(filename);
+
+  DB db(const_cast<char *>("data.db"));
   db.run(sql);
 
   mpv_handle *ctx = mpv_create();
@@ -185,9 +184,9 @@ int main() {
           // Flip rendering (needed due to flipped GL coordinate system).
           {MPV_RENDER_PARAM_FLIP_Y, &mpv_true},
           {MPV_RENDER_PARAM_INVALID, nullptr}};
+
       // See render_gl.h on what OpenGL environment mpv expects, and
       // other API details.
-      //
       mpv_render_context_render(mpv_gl, params);
       SDL_GL_SwapWindow(window);
     }
