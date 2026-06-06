@@ -1,16 +1,6 @@
 #include "mpv_helpers.h"
 #include "util.h"
 
-static void on_mpv_events(void *ctx) {
-  SDL_Event event = {.type = wakeup_on_mpv_events};
-  SDL_PushEvent(&event);
-}
-
-static void on_mpv_render_update(void *ctx) {
-  SDL_Event event = {.type = wakeup_on_mpv_render_update};
-  SDL_PushEvent(&event);
-}
-
 static void *get_proc_address_mpv(void *fn_ctx, const char *name) {
   (void)fn_ctx;
 
@@ -58,14 +48,4 @@ void s_mpv_init(mpv_handle *&mpv, mpv_render_context *&mpv_gl) {
   if (mpv_render_context_create(&mpv_gl, mpv, params) < 0) {
     die("failed to initialize mpv GL context");
   }
-
-  wakeup_on_mpv_render_update = SDL_RegisterEvents(1);
-  wakeup_on_mpv_events = SDL_RegisterEvents(1);
-
-  if (wakeup_on_mpv_render_update == (Uint32)-1 ||
-      wakeup_on_mpv_events == (Uint32)-1)
-    die("could not register events");
-
-  mpv_set_wakeup_callback(mpv, on_mpv_events, NULL);
-  mpv_render_context_set_update_callback(mpv_gl, on_mpv_render_update, NULL);
 }
