@@ -13,7 +13,14 @@ pkg_check_modules(MPV REQUIRED IMPORTED_TARGET mpv)
 pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3)
 pkg_check_modules(SQLite3 REQUIRED IMPORTED_TARGET sqlite3)
 
-add_executable(stv src/main.cpp src/db.cpp)
+add_executable(stv
+  src/main.cpp
+  src/app.cpp
+  src/mpv_helpers.cpp
+  src/sdl_helpers.cpp
+  src/db.cpp
+)
+
 add_executable(stv_migration src/migrate.cpp src/db.cpp)
 add_library(std OBJECT carbon-src/std/print.cpp)
 
