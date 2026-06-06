@@ -19,6 +19,7 @@ public:
   ~App();
 
   int loop();
+  void play(std::string filepath);
 
   static void on_mpv_events(void *ctx);
   static void on_mpv_render_update(void *ctx);

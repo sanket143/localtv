@@ -7,6 +7,8 @@
 int main() {
   App app;
 
+  int i = 0;
+
   while (app.loop()) {
   }
 

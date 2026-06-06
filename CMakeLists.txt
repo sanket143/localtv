@@ -22,7 +22,7 @@ add_executable(stv
 )
 
 add_executable(stv_migration src/migrate.cpp src/db.cpp)
-add_library(std OBJECT carbon-src/std/print.cpp)
+# add_library(std OBJECT carbon-src/std/print.cpp)
 
 target_link_libraries(stv PRIVATE PkgConfig::MPV)
 target_link_libraries(stv PRIVATE PkgConfig::SDL3)
