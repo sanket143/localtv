@@ -1,8 +1,6 @@
 #include "app.h"
-#include "sdl_helpers.h"
 #include "util.h"
 #include <mpv/render.h>
-#include <print>
 
 App::App() : db(const_cast<char *>("data.db")) {
   mpv = mpv_create();

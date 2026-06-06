@@ -17,7 +17,6 @@ add_executable(stv
   src/main.cpp
   src/app.cpp
   src/mpv_helpers.cpp
-  src/sdl_helpers.cpp
   src/db.cpp
 )
 
