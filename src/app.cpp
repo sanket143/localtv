@@ -16,8 +16,6 @@ App::App() : db(const_cast<char *>("data.db")) {
 
   mpv_set_wakeup_callback(mpv, on_mpv_events, NULL);
   mpv_render_context_set_update_callback(mpv_gl, on_mpv_render_update, NULL);
-
-  play(".testfiles/sample-4.mp4");
 }
 
 App::~App() {
@@ -44,7 +42,7 @@ int App::loop() {
 
   case SDL_EVENT_KEY_DOWN:
     if (event.key.scancode == SDL_SCANCODE_RETURN) {
-      play(".testfiles/sample-4.mp4");
+      play("https://www.youtube.com/watch?v=xmk0j-HdgwY");
     }
 
     break;
