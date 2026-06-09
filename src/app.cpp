@@ -42,7 +42,7 @@ int App::loop() {
 
   case SDL_EVENT_KEY_DOWN:
     if (event.key.scancode == SDL_SCANCODE_RETURN) {
-      play("https://www.youtube.com/watch?v=xmk0j-HdgwY");
+      play("https://www.youtube.com/watch?v=jjp3WC8Unj8");
     }
 
     break;

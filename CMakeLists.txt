@@ -20,10 +20,12 @@ add_executable(localtv
   src/db.cpp
 )
 
+add_executable(localtv_setup src/setup.cpp src/db.cpp)
 add_executable(localtv_migration src/migrate.cpp src/db.cpp)
 # add_library(std OBJECT carbon-src/std/print.cpp)
 
 target_link_libraries(localtv PRIVATE PkgConfig::MPV)
 target_link_libraries(localtv PRIVATE PkgConfig::SDL3)
 target_link_libraries(localtv PRIVATE PkgConfig::SQLite3)
+target_link_libraries(localtv_setup PRIVATE PkgConfig::SQLite3)
 target_link_libraries(localtv_migration PRIVATE PkgConfig::SQLite3)
