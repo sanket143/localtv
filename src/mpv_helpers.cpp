@@ -37,14 +37,15 @@ void s_mpv_init(mpv_handle *&mpv, mpv_render_context *&mpv_gl,
     die("failed to create SDL GL context");
   }
 
-  // mpv_set_option_string(mpv, "input-cursor", "no"); // no mouse handling
-  // mpv_set_option_string(mpv, "cursor-autohide",
-  //                       "no"); // no cursor-autohide, we handle that
-  // mpv_set_option_string(mpv, "ytdl", "yes"); // youtube-dl support
-  // mpv_set_option_string(mpv, "sub-auto",
-  //                       "fuzzy"); // Automatic subfile detection
-  // mpv_set_option_string(mpv, "audio-client-name",
-  //                       "stv"); // show correct icon in e.g. pavucontrol
+  mpv_set_option_string(mpv, "input-cursor", "no"); // no mouse handling
+  mpv_set_option_string(mpv, "cursor-autohide",
+                        "no"); // no cursor-autohide, we handle that
+  mpv_set_option_string(mpv, "ytdl", "yes"); // youtube-dl support
+  mpv_set_option_string(mpv, "sub-auto",
+                        "fuzzy"); // Automatic subfile detection
+  mpv_set_option_string(mpv, "audio-client-name",
+                        "stv"); // show correct icon in e.g. pavucontrol
+  mpv_set_option_string(mpv, "mute", "yes"); // temporary for testing
 
   mpv_opengl_init_params gl_init_params;
   gl_init_params.get_proc_address = get_proc_address_mpv;
