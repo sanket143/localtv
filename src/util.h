@@ -1,6 +1,3 @@
-#include <print>
+void die(const char *msg);
 
-static void die(const char *msg) {
-  std::print(stderr, "%s\n", msg);
-  exit(1);
-}
+int get_current_secs();

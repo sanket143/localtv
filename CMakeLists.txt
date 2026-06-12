@@ -14,14 +14,15 @@ pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3)
 pkg_check_modules(SQLite3 REQUIRED IMPORTED_TARGET sqlite3)
 
 add_executable(localtv
+  src/util.cpp
   src/main.cpp
   src/app.cpp
   src/mpv_helpers.cpp
   src/db.cpp
 )
 
-add_executable(localtv_setup src/setup.cpp src/db.cpp)
-add_executable(localtv_migration src/migrate.cpp src/db.cpp)
+add_executable(localtv_setup src/setup.cpp src/db.cpp src/util.cpp)
+add_executable(localtv_migration src/migrate.cpp src/db.cpp src/util.cpp)
 # add_library(std OBJECT carbon-src/std/print.cpp)
 
 target_link_libraries(localtv PRIVATE PkgConfig::MPV)

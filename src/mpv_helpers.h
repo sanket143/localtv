@@ -1,5 +1,7 @@
+#include "util.h"
 #include <SDL3/SDL.h>
 #include <mpv/client.h>
+#include <mpv/render.h>
 #include <mpv/render_gl.h>
 
 static int mpv_true = 1;

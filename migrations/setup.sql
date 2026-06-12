@@ -1,3 +1,12 @@
+create table if not exists global_context (
+    id int default 0,
+    start_epoch bigint,
+
+    primary key (id)
+);
+
+insert into global_context (id, start_epoch) values (0, 1781025636);
+
 create table if not exists channel (
     id serial,
     name varchar(100),
@@ -20,6 +29,22 @@ create table if not exists video (
 
     primary key (id)
 );
+
+create table if not exists schedule (
+    id serial,
+    fk_channel_id int,
+    fk_video_id varchar(100),
+    display_sequence serial default 0,
+
+    primary key (id)
+);
+
+-- testing videos in schedule
+insert into schedule(fk_channel_id, fk_video_id, display_sequence) values
+    (1, 'W7y7wNB-NZc', 0),
+    (2, 'SBFB1ELmXHI', 1),
+    (3, 'NIqp91dN6fk', 2)
+;
 
 -- Respawn TV
 -- - https://youtu.be/W7y7wNB-NZc?si=uNxxBIJQsXyNuIE3 

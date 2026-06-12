@@ -1,6 +1,6 @@
 #include "app.h"
+#include "mpv_helpers.h"
 #include "util.h"
-#include <mpv/render.h>
 
 App::App() : db(const_cast<char *>("data.db")) {
   mpv = mpv_create();
@@ -29,8 +29,9 @@ int App::loop() {
   int redraw = 0;
   SDL_Event event;
 
-  if (SDL_WaitEvent(&event) != 1)
+  if (SDL_WaitEvent(&event) != 1) {
     die("event loop error");
+  }
 
   switch (event.type) {
   case SDL_EVENT_QUIT:
@@ -102,4 +103,8 @@ void App::on_mpv_events(void *ctx) {
 void App::on_mpv_render_update(void *ctx) {
   SDL_Event event = {.type = wakeup_on_mpv_render_update};
   SDL_PushEvent(&event);
+}
+
+void App::play_channel(int channel_id) {
+  db.run("select * from schedule limit 1;");
 }
