@@ -20,7 +20,6 @@ add_executable(localtv
   src/mpv_helpers.cpp
   src/db.cpp
   src/video.cpp
-  src/db_helper.cpp
   src/channel.cpp
 )
 
