@@ -1,4 +1,5 @@
 #include "db.h"
+#include "util.h"
 #include <fstream>
 #include <print>
 #include <sstream>
@@ -24,13 +25,10 @@ int read_and_execute_sql_file(DB *db, char *filename) {
 
 int main(int argc, char *argv[]) {
   if (argc > 1 && std::string(argv[1]) == "reset") {
-    std::string path = "./migrations/drop.sql";
-    DB db(const_cast<char *>("data.db"));
-
-    read_and_execute_sql_file(&db, path.data());
+    exec_cmd("rm data.db");
   }
 
-  std::string path = "./migrations/setup.sql";
+  std::string path = "./migrations/up.sql";
   DB db(const_cast<char *>("data.db"));
 
   read_and_execute_sql_file(&db, path.data());

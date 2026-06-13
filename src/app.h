@@ -1,9 +1,11 @@
+#include "channel.h"
 #include "db.h"
 #include <SDL3/SDL.h>
 #include <mpv/client.h>
 #include <mpv/render.h>
 #include <mpv/render_gl.h>
 #include <string>
+#include <vector>
 
 // custom events to trigger sdl redraw
 static Uint32 wakeup_on_mpv_render_update, wakeup_on_mpv_events;
@@ -14,6 +16,12 @@ private:
 
   int epoch;
   SDL_Window *window;
+
+  int current_channel;
+  std::vector<Channel> channels;
+  // Channel *channels_ptr;
+
+  // handlers
   mpv_handle *mpv;
   mpv_render_context *mpv_gl;
 
@@ -22,9 +30,17 @@ public:
   ~App();
 
   int loop();
+
+  // video options
   void play(std::string filepath);
   void play_channel(int channel_id);
 
+  // channel related helpers I guess?
+  void load_channels();
+  void next_channel();
+  void prev_channel();
+
+  // event listeners
   static void on_mpv_events(void *ctx);
   static void on_mpv_render_update(void *ctx);
 };

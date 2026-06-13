@@ -3,8 +3,9 @@
 #include "util.h"
 #include "video.h"
 #include <print>
+#include <stdlib.h>
 
-App::App() : db(const_cast<char *>("data.db")) {
+App::App() : db("data.db"), current_channel(0) {
   mpv = mpv_create();
   s_mpv_init(mpv, mpv_gl, window);
 
@@ -18,6 +19,9 @@ App::App() : db(const_cast<char *>("data.db")) {
 
   mpv_set_wakeup_callback(mpv, on_mpv_events, NULL);
   mpv_render_context_set_update_callback(mpv_gl, on_mpv_render_update, NULL);
+
+  load_channels();
+  // TODO: load all the channels here
 }
 
 App::~App() {
@@ -109,6 +113,46 @@ void App::on_mpv_render_update(void *ctx) {
   SDL_PushEvent(&event);
 }
 
+// Channel related functions
+void App::load_channels() {
+  Channel *channels_ptr = new Channel[5];
+
+  std::println("println");
+  channels_ptr[0] = Channel("UCOxqgCwgOqC2lMqC5PYz_Dg");
+  std::println("channels_ptr {}", channels_ptr[0].id);
+
+  channels.push_back(Channel("UCOxqgCwgOqC2lMqC5PYz_Dg"));
+
+  auto cb = [](void *data, int argc, char **argv, char **azColName) {
+    std::print("Inside pointer address: {}\n", data);
+    // std::vector<Channel> *channels_data = (std::vector<Channel> *)data;
+    Channel *channels_data = (Channel *)data;
+
+    // channels->push_back(Channel("test"));
+
+    // why isn't this size value same as the outside?
+    // it's printing something random
+    // std::print("Inside size: {}\n", channels_data->size());
+    std::print("Channel: [{}]", channels_data[0].id);
+
+    // for (int i = 0; i < argc; i++) {
+    //   std::print("{}, {}\n", azColName[i], argv[i]);
+    // }
+
+    return 0;
+  };
+
+  std::vector<Channel> *ptr = &channels;
+  std::print("Outside pointer address: {}\n", static_cast<const void *>(ptr));
+  std::print("Outside size: {}\n", ptr->size());
+
+  db.exec("select * from channel;", cb, channels_ptr);
+
+  std::print("Outside size: {}\n", ptr->size());
+}
+
+void App::next_channel() {}
+void App::prev_channel() {}
 void App::play_channel(int channel_id) {
   db.select("select * from schedule limit 1;", &default_callback);
 }

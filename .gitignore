@@ -2,3 +2,4 @@ build
 .testfiles
 data.db
 *.o
+output.json

@@ -30,8 +30,8 @@ int DB::run(const char *sql) {
   return sqlite3_exec(conn, sql, &default_callback, nullptr, nullptr);
 }
 
-int DB::select(const char *sql,
-               int (*cb)(void *data, int argc, char **argv, char **azColName)) {
+void DB::select(const char *sql, int (*cb)(void *data, int argc, char **argv,
+                                           char **azColName)) {
 
   int test_data[] = {143};
   char *err_msg;
@@ -48,6 +48,22 @@ int DB::select(const char *sql,
   }
 
   std::println("after  sqlite3_exec: {}", code);
+}
 
-  return 0;
+void DB::exec(const char *sql,
+              int (*cb)(void *data, int argc, char **argv, char **azColName),
+              void *data) {
+  char *err_msg;
+
+  // I'm getting away from using helpers, because it'll keep getting increased
+  // Until I end up with same signature as sqlite3_exec
+  int code = sqlite3_exec(conn, sql, cb, &data, &err_msg);
+
+  if (code > 0) {
+    // Yes we crash if there's an error, be careful
+    sqlite3_free(err_msg);
+    die(err_msg);
+  } else {
+    sqlite3_free(err_msg);
+  }
 }
