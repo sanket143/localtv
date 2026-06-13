@@ -1,6 +1,6 @@
 create table if not exists global_context (
     id int default 0,
-    start_epoch bigint,
+    start_epoch bigint not null,
 
     primary key (id)
 );
@@ -9,8 +9,8 @@ insert into global_context (id, start_epoch) values (0, 1781025636);
 
 create table if not exists channel (
     id serial,
-    name varchar(100),
-    is_deleted bool default false,
+    name varchar(100) not null,
+    is_deleted bool default false not null,
 
     primary key (id)
 );
@@ -22,19 +22,19 @@ insert into channel(id, name) values (2, 'GlitchNet') on conflict (id) do nothin
 insert into channel(id, name) values (3, 'Zero-G Games') on conflict (id) do nothing;
 
 create table if not exists video (
-    id varchar(100),
-    title varchar(100),
-    duration integer,
-    is_deleted bool default false,
+    id varchar(100) not null,
+    title varchar(100) not null,
+    duration integer not null,
+    is_deleted bool default false not null,
 
     primary key (id)
 );
 
 create table if not exists schedule (
     id serial,
-    fk_channel_id int,
-    fk_video_id varchar(100),
-    display_sequence serial default 0,
+    fk_channel_id int not null,
+    fk_video_id varchar(100) not null,
+    display_sequence serial default 0 not null,
 
     primary key (id)
 );

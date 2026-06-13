@@ -1,9 +1,10 @@
 #include "db.h"
+#include "util.h"
 #include <iostream>
 #include <print>
 #include <pugixml.hpp>
 
-int main(int argc, char *argv[]) {
+int helper(int argc, char *argv[]) {
   DB db(const_cast<char *>("data.db"));
 
   std::string id, title;
@@ -22,5 +23,17 @@ int main(int argc, char *argv[]) {
 
   int resp = db.run(sql.data());
   std::println("{}", resp);
+  return 0;
+}
+
+int main(int argc, char *argv[]) {
+  const char *cmd = "ls";
+
+  // Why is this an issue? I'm including util.h
+  // Signatures are also same
+  std::string out = exec_cmd(cmd);
+
+  std::println("{}", out);
+
   return 0;
 }

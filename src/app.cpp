@@ -1,6 +1,8 @@
 #include "app.h"
 #include "mpv_helpers.h"
 #include "util.h"
+#include "video.h"
+#include <print>
 
 App::App() : db(const_cast<char *>("data.db")) {
   mpv = mpv_create();
@@ -43,7 +45,9 @@ int App::loop() {
 
   case SDL_EVENT_KEY_DOWN:
     if (event.key.scancode == SDL_SCANCODE_RETURN) {
-      play("https://www.youtube.com/watch?v=jjp3WC8Unj8");
+      std::println("Here, trying to play, or get info");
+      Video video("jjp3WC8Unj8");
+      // play("https://www.youtube.com/watch?v=jjp3WC8Unj8");
     }
 
     break;
@@ -106,5 +110,5 @@ void App::on_mpv_render_update(void *ctx) {
 }
 
 void App::play_channel(int channel_id) {
-  db.run("select * from schedule limit 1;");
+  db.select("select * from schedule limit 1;", &default_callback);
 }

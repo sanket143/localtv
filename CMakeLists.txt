@@ -19,6 +19,8 @@ add_executable(localtv
   src/app.cpp
   src/mpv_helpers.cpp
   src/db.cpp
+  src/video.cpp
+  src/db_helper.cpp
 )
 
 add_executable(localtv_setup src/setup.cpp src/db.cpp src/util.cpp)
