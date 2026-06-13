@@ -115,7 +115,7 @@ void App::on_mpv_render_update(void *ctx) {
 
 // Channel related functions
 void App::load_channels() {
-  Channel *channels_ptr = new Channel[5];
+  std::vector<Channel> channels_ptr(5);
 
   std::println("println");
   channels_ptr[0] = Channel("UCOxqgCwgOqC2lMqC5PYz_Dg");
@@ -126,14 +126,14 @@ void App::load_channels() {
   auto cb = [](void *data, int argc, char **argv, char **azColName) {
     std::print("Inside pointer address: {}\n", data);
     // std::vector<Channel> *channels_data = (std::vector<Channel> *)data;
-    Channel *channels_data = (Channel *)data;
+    auto *channels_data = static_cast<std::vector<Channel> *>(data);
 
     // channels->push_back(Channel("test"));
 
     // why isn't this size value same as the outside?
     // it's printing something random
     // std::print("Inside size: {}\n", channels_data->size());
-    std::print("Channel: [{}]", channels_data[0].id);
+    std::println("Channel: [{}]", channels_data->at(0).id);
 
     // for (int i = 0; i < argc; i++) {
     //   std::print("{}, {}\n", azColName[i], argv[i]);
@@ -146,7 +146,7 @@ void App::load_channels() {
   std::print("Outside pointer address: {}\n", static_cast<const void *>(ptr));
   std::print("Outside size: {}\n", ptr->size());
 
-  db.exec("select * from channel;", cb, channels_ptr);
+  db.exec("select * from channel;", cb, &channels);
 
   std::print("Outside size: {}\n", ptr->size());
 }

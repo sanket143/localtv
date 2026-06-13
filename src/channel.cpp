@@ -1,7 +1,7 @@
 #include "channel.h"
 
 Channel::Channel() {};
-Channel::Channel(std::string id) : id(id) {
+Channel::Channel(const std::string id) : id(id) {
   // populate videos from db
   // compute the schedule, and current video index
   //

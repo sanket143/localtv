@@ -55,9 +55,7 @@ void DB::exec(const char *sql,
               void *data) {
   char *err_msg;
 
-  // I'm getting away from using helpers, because it'll keep getting increased
-  // Until I end up with same signature as sqlite3_exec
-  int code = sqlite3_exec(conn, sql, cb, &data, &err_msg);
+  int code = sqlite3_exec(conn, sql, cb, data, &err_msg);
 
   if (code > 0) {
     // Yes we crash if there's an error, be careful

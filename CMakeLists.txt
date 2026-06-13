@@ -14,8 +14,8 @@ pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3)
 pkg_check_modules(SQLite3 REQUIRED IMPORTED_TARGET sqlite3)
 
 add_executable(localtv
-  src/util.cpp
   src/main.cpp
+  src/util.cpp
   src/app.cpp
   src/mpv_helpers.cpp
   src/db.cpp
