@@ -115,44 +115,24 @@ void App::on_mpv_render_update(void *ctx) {
 
 // Channel related functions
 void App::load_channels() {
-  std::vector<Channel> channels_ptr(5);
-
-  std::println("println");
-  channels_ptr[0] = Channel("UCOxqgCwgOqC2lMqC5PYz_Dg");
-  std::println("channels_ptr {}", channels_ptr[0].id);
-
-  channels.push_back(Channel("UCOxqgCwgOqC2lMqC5PYz_Dg"));
-
-  auto cb = [](void *data, int argc, char **argv, char **azColName) {
-    std::print("Inside pointer address: {}\n", data);
-    // std::vector<Channel> *channels_data = (std::vector<Channel> *)data;
+  auto cb = [](void *data, int argc, char **argv, char **column_name_map) {
     auto *channels_data = static_cast<std::vector<Channel> *>(data);
 
-    // channels->push_back(Channel("test"));
-
-    // why isn't this size value same as the outside?
-    // it's printing something random
-    // std::print("Inside size: {}\n", channels_data->size());
-    std::println("Channel: [{}]", channels_data->at(0).id);
-
-    // for (int i = 0; i < argc; i++) {
-    //   std::print("{}, {}\n", azColName[i], argv[i]);
-    // }
+    for (int i = 0; i < argc; i++) {
+      if (strcmp(column_name_map[i], "id") == 0) {
+        channels_data->push_back(Channel(std::stoi(argv[i])));
+      }
+    }
 
     return 0;
   };
 
-  std::vector<Channel> *ptr = &channels;
-  std::print("Outside pointer address: {}\n", static_cast<const void *>(ptr));
-  std::print("Outside size: {}\n", ptr->size());
-
   db.exec("select * from channel;", cb, &channels);
-
-  std::print("Outside size: {}\n", ptr->size());
 }
 
 void App::next_channel() {}
 void App::prev_channel() {}
 void App::play_channel(int channel_id) {
+  // compute the next video, and play it
   db.select("select * from schedule limit 1;", &default_callback);
 }

@@ -19,7 +19,6 @@ private:
 
   int current_channel;
   std::vector<Channel> channels;
-  // Channel *channels_ptr;
 
   // handlers
   mpv_handle *mpv;

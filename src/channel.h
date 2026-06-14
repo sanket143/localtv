@@ -8,9 +8,8 @@ private:
   Video *videos;
 
 public:
-  std::string id;
+  int id;
 
-  Channel();
-  Channel(std::string id);
+  Channel(int id);
   Video get_current_video();
 };
