@@ -100,8 +100,9 @@ int App::loop() {
   return 1;
 }
 
-void App::play(std::string filepath) {
-  const char *cmd[] = {"loadfile", filepath.data(), NULL};
+void App::play(std::string filepath, int start_seconds) {
+  std::string start_opt = "start=" + std::to_string(start_seconds);
+  const char *cmd[] = {"loadfile", filepath.data(), "replace", "0", start_opt.data(), NULL};
   mpv_command(mpv, cmd);
 }
 
@@ -110,7 +111,6 @@ void App::seek(int duration) {
 
   std::string duration_str = std::to_string(duration);
   const char *cmd[] = {"seek", duration_str.data(), "absolute", NULL};
-
   mpv_command(mpv, cmd);
 }
 
@@ -151,6 +151,5 @@ void App::play_channel() {
   Video video = std::get<0>(play_info);
   int seek_duration = std::get<1>(play_info);
 
-  play(video.url());
-  seek(seek_duration);
+  play(video.url(), seek_duration);
 }
