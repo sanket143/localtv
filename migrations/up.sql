@@ -53,7 +53,7 @@ insert into video(id, title, description, duration) values
 -- - https://youtu.be/W7y7wNB-NZc?si=uNxxBIJQsXyNuIE3 
 -- - https://youtu.be/SBFB1ELmXHI?si=J2vfpJ0sWjSIXlGv 
 -- - https://youtu.be/NIqp91dN6fk?si=_LgMIpAfsx7JWfgt 
--- - https://www.youtube.com/live/5RRDVsWHTKM?si=gEG9C5b1jBa6bH1q
+-- - https://www.youtube.com/watch?v=5RRDVsWHTKM
 --
 -- GlitchNet
 -- - https://www.youtube.com/playlist?list=PLs1-UdHIwbo6PGYwjCWzrnAUZ7AkeCc95 
@@ -64,4 +64,12 @@ insert into video(id, title, description, duration) values
 -- - https://youtu.be/lnGvPESpmjY?si=dQ0L24x27eTho-LM 
 -- - https://youtu.be/0tRbebJ0uUE?si=RPeP7S6olbw8wtT9
 -- - https://www.youtube.com/playlist?list=PLTCabuBw1RkvTmJrOgdoG_wpRuOgE-_Lb 
-
+--
+-- Velocity X
+-- - https://youtu.be/2nD0Dk7R5IE?si=oQ1B6pCwqi4gwFEe 
+-- - https://youtu.be/wt7LbWWSYpI?si=x29bgEebFw9Uynqu 
+-- - https://youtu.be/uGAV89Qrr8Q?si=lMgZiEZsHcJ-2zo9 
+-- - https://youtu.be/HAj0ibTy3gw?si=VeQ7Qt3Rkh67XUd- 
+-- - https://youtu.be/VrORfPucQVo?si=_GMfCDTR-v91izQK 
+-- - https://youtu.be/C45_zPRNcdY?si=GhvxQG2175G0vV5t 
+-- - https://www.youtube.com/live/EXwof-6LwDM?si=QpJCc6umskC22MCt 

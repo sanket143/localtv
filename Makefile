@@ -8,4 +8,4 @@ reset:
 	cmake -B build && cmake --build build && ./build/localtv_migration reset
 
 setup:
-	perl setup.pl
+	cmake -B build && cmake --build build && ./build/localtv_setup

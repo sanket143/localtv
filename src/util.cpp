@@ -1,5 +1,6 @@
 #include "util.h"
 #include <chrono>
+#include <json/json.h>
 #include <memory>
 #include <print>
 
@@ -20,14 +21,12 @@ std::string exec_cmd(const char *cmd) {
   std::array<char, 128> buffer;
   std::string result;
 
-  // what is FILE?
   std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
 
   if (!pipe) {
     die("popen() failed");
   }
 
-  // ?????
   while (fgets(buffer.data(), static_cast<int>(buffer.size()), pipe.get()) !=
          nullptr) {
     result += buffer.data();
