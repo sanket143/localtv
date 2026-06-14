@@ -31,7 +31,7 @@ public:
   int loop();
 
   // video options
-  void play(std::string filepath);
+  void play(std::string filepath, int start_seconds = 0);
   void play_channel();
   void seek(int duration);
 
