@@ -25,7 +25,15 @@ add_executable(localtv
   src/channel.cpp
 )
 
-add_executable(localtv_setup src/setup.cpp src/db.cpp src/util.cpp)
+add_executable(localtv_setup
+  src/setup.cpp
+  src/db.cpp
+  src/util.cpp
+  src/channel.cpp
+  src/video.cpp
+  src/schedule.cpp
+)
+
 add_executable(localtv_migration src/migrate.cpp src/db.cpp src/util.cpp)
 # add_library(std OBJECT carbon-src/std/print.cpp)
 

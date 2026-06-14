@@ -55,7 +55,13 @@ int App::loop() {
   case SDL_EVENT_KEY_DOWN:
     if (event.key.scancode == SDL_SCANCODE_RETURN) {
       play_channel();
-      // play("https://www.youtube.com/watch?v=jjp3WC8Unj8");
+    }
+
+    if (event.key.scancode == SDL_SCANCODE_J) {
+      next_channel();
+    }
+    if (event.key.scancode == SDL_SCANCODE_K) {
+      prev_channel();
     }
 
     break;
@@ -166,15 +172,27 @@ void App::load_channels() {
   db.exec("select * from channel;", cb, &channels);
 }
 
-void App::next_channel() {}
-void App::prev_channel() {}
+void App::next_channel() {
+  current_channel = (current_channel + 1) % channels.size();
+  play_channel();
+}
+
+void App::prev_channel() {
+  current_channel = (current_channel - 1 + channels.size()) % channels.size();
+  play_channel();
+}
+
 void App::play_channel() {
-  // compute the next video, and play it
-  channels[0].process_schedule(&db);
-  std::tuple<Video, int> play_info = channels[0].get_current_video();
+  channels[current_channel].process_schedule(&db);
 
-  Video video = std::get<0>(play_info);
-  int seek_duration = std::get<1>(play_info);
+  if (channels[current_channel].videos.size() > 0) {
 
-  play(video.url(), seek_duration);
+    std::tuple<Video, int> play_info =
+        channels[current_channel].get_current_video();
+
+    Video video = std::get<0>(play_info);
+    int seek_duration = std::get<1>(play_info);
+
+    play(video.url(), seek_duration);
+  }
 }

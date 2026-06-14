@@ -2,8 +2,6 @@
 
 #include <sqlite3.h>
 
-int default_callback(void *data, int argc, char **argv, char **azColName);
-
 class DB {
 private:
   sqlite3 *conn;
@@ -17,3 +15,5 @@ public:
             int (*cb)(void *data, int argc, char **argv, char **azColName),
             void *);
 };
+
+DB get_db_instance();

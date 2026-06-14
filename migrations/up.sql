@@ -18,6 +18,7 @@ create table if not exists channel (
 insert into channel(id, name) values (1, 'Respawn TV') on conflict (id) do nothing;
 insert into channel(id, name) values (2, 'GlitchNet') on conflict (id) do nothing;
 insert into channel(id, name) values (3, 'Zero-G Games') on conflict (id) do nothing;
+insert into channel(id, name) values (4, 'Velocity X') on conflict (id) do nothing;
 
 create table if not exists video (
     id varchar(100) not null,
@@ -33,14 +34,16 @@ create table if not exists schedule (
     id integer primary key autoincrement,
     fk_channel_id integer not null,
     fk_video_id varchar(100) not null,
-    display_sequence integer default 0 not null
+    created_at datetime default current_timestamp,
+
+    unique(fk_channel_id, fk_video_id)
 );
 
 -- testing videos in schedule
-insert into schedule(fk_channel_id, fk_video_id, display_sequence) values
-    (1, 'W7y7wNB-NZc', 0),
-    (1, 'SBFB1ELmXHI', 1),
-    (1, 'NIqp91dN6fk', 2)
+insert into schedule(fk_channel_id, fk_video_id) values
+    (1, 'W7y7wNB-NZc'),
+    (1, 'SBFB1ELmXHI'),
+    (1, 'NIqp91dN6fk')
 ;
 
 insert into video(id, title, description, duration) values

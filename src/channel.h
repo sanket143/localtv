@@ -4,13 +4,16 @@
 #include <vector>
 
 class Channel {
-private:
+public:
   int id;
-
+  std::string name;
   std::vector<Video> videos;
 
-public:
+  Channel();
   Channel(int id);
+
+  static Channel from_channel_name(std::string channel_name);
   std::tuple<Video, int> get_current_video();
+
   void process_schedule(DB *db);
 };

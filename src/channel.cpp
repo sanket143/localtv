@@ -14,6 +14,38 @@ Channel::Channel(int id) : id(id) {
   // Need some time to think about this
 }
 
+Channel::Channel() {}
+
+Channel Channel::from_channel_name(std::string channel_name) {
+  DB db = get_db_instance();
+  Channel channel;
+
+  auto cb = [](void *data, int argc, char **argv, char **column_name_map) {
+    Channel *channel = (Channel *)data;
+
+    for (int i = 0; i < argc; i++) {
+      if (argv[i] != nullptr) {
+        if (strcmp(column_name_map[i], "id") == 0) {
+          channel->id = std::stoi(argv[i]);
+        }
+
+        if (strcmp(column_name_map[i], "name") == 0) {
+          channel->name = argv[i];
+        }
+      }
+    }
+
+    return 0;
+  };
+
+  std::string sql = std::format(
+      "select * from channel as c where c.name = '{}'", channel_name);
+
+  db.exec(sql.data(), cb, &channel);
+
+  return channel;
+}
+
 std::tuple<Video, int> Channel::get_current_video() {
   int channel_runtime = 0;
 
@@ -41,6 +73,8 @@ std::tuple<Video, int> Channel::get_current_video() {
 }
 
 void Channel::process_schedule(DB *db) {
+  videos.clear();
+
   auto cb = [](void *data, int argc, char **argv, char **column_name_map) {
     auto *videos_data = static_cast<std::vector<Video> *>(data);
 
@@ -74,13 +108,12 @@ void Channel::process_schedule(DB *db) {
   };
 
   // TODO; Use sqlite3_bind to bind variables
-  db->exec(
-      std::format(
-          "select v.* from schedule as s join video as v on v.id = "
-          "s.fk_video_id where s.fk_channel_id = {} order by display_sequence;",
-          id)
-          .data(),
-      cb, &videos);
+  db->exec(std::format(
+               "select v.* from schedule as s join video as v on v.id = "
+               "s.fk_video_id where s.fk_channel_id = {} order by created_at;",
+               id)
+               .data(),
+           cb, &videos);
 
   std::println("process: {}", videos.size());
 }

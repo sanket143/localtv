@@ -3,27 +3,6 @@
 #include <print>
 #include <sqlite3.h>
 
-// 1. The Callback Function
-// This function runs automatically FOR EVERY ROW returned by the SELECT query.
-int default_callback(void *data, int argc, char **argv, char **azColName) {
-  // argc = number of columns
-  // argv = array of strings representing row values
-  // azColName = array of strings representing column names
-  //
-  int *decoded = (int *)data;
-
-  std::print("{}\n", decoded[0]);
-  std::print("{}\n", argc);
-  for (int i = 0; i < argc; i++) {
-    // SQLite represents values as strings in this callback.
-    // Check for NULL values before printing.
-    std::print("{}, {}\n", azColName[i], argv[i]);
-  }
-
-  return 0; // Return 0 to continue reading next rows. Returning non-zero stops
-            // the query.
-}
-
 DB::DB(const char *filename) { sqlite3_open(filename, &conn); }
 
 int DB::run(const char *sql) {
@@ -75,4 +54,10 @@ void DB::exec(const char *sql,
   } else {
     sqlite3_free(err_msg);
   }
+}
+
+DB get_db_instance() {
+  DB db("data.db");
+
+  return db;
 }

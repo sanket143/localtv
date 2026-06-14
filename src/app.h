@@ -17,7 +17,7 @@ private:
   int epoch;
   SDL_Window *window;
 
-  int current_channel;
+  int current_channel = 0;
   std::vector<Channel> channels;
 
   // handlers
