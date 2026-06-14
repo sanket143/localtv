@@ -40,6 +40,10 @@ public:
   void next_channel();
   void prev_channel();
 
+  // painters
+  void draw_overlay();
+  void redraw();
+
   // event listeners
   static void on_mpv_events(void *ctx);
   static void on_mpv_render_update(void *ctx);

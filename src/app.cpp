@@ -2,6 +2,8 @@
 #include "mpv_helpers.h"
 #include "util.h"
 #include "video.h"
+#include <GL/gl.h>
+#include <SDL3/SDL.h>
 #include <mpv/client.h>
 #include <print>
 #include <stdlib.h>
@@ -35,7 +37,7 @@ App::~App() {
 }
 
 int App::loop() {
-  int redraw = 0;
+  int should_redraw = 0;
   SDL_Event event;
 
   if (SDL_WaitEvent(&event) != 1) {
@@ -47,7 +49,7 @@ int App::loop() {
     return 0;
 
   case SDL_EVENT_WINDOW_EXPOSED:
-    redraw = 1;
+    should_redraw = 1;
     break;
 
   case SDL_EVENT_KEY_DOWN:
@@ -64,37 +66,15 @@ int App::loop() {
       uint64_t flags = mpv_render_context_update(mpv_gl);
 
       if (flags & MPV_RENDER_UPDATE_FRAME) {
-        redraw = 1;
+        should_redraw = 1;
       }
     }
 
     break;
   }
 
-  if (redraw) {
-    int w, h;
-    SDL_GetWindowSize(window, &w, &h);
-    mpv_opengl_fbo opengl_fbo = {
-        .fbo = 0,
-        .w = w,
-        .h = h,
-    };
-
-    mpv_render_param params[] = {
-        // Specify the default framebuffer (0) as target. This will
-        // render onto the entire screen. If you want to show the video
-        // in a smaller rectangle or apply fancy transformations, you'll
-        // need to render into a separate FBO and draw it manually.
-        {MPV_RENDER_PARAM_OPENGL_FBO, &opengl_fbo},
-        // Flip rendering (needed due to flipped GL coordinate system).
-        {MPV_RENDER_PARAM_FLIP_Y, &mpv_true},
-        {MPV_RENDER_PARAM_INVALID, nullptr},
-    };
-
-    // See render_gl.h on what OpenGL environment mpv expects, and
-    // other API details.
-    mpv_render_context_render(mpv_gl, params);
-    SDL_GL_SwapWindow(window);
+  if (should_redraw) {
+    redraw();
   }
 
   return 1;
@@ -102,8 +82,10 @@ int App::loop() {
 
 void App::play(std::string filepath, int start_seconds) {
   std::string start_opt = "start=" + std::to_string(start_seconds);
-  const char *cmd[] = {"loadfile", filepath.data(), "replace", "0", start_opt.data(), NULL};
-  mpv_command(mpv, cmd);
+  const char *cmd[] = {"loadfile", filepath.data(),  "replace",
+                       "0",        start_opt.data(), NULL};
+
+  mpv_command_async(mpv, 0, cmd);
 }
 
 void App::seek(int duration) {
@@ -112,6 +94,49 @@ void App::seek(int duration) {
   std::string duration_str = std::to_string(duration);
   const char *cmd[] = {"seek", duration_str.data(), "absolute", NULL};
   mpv_command(mpv, cmd);
+}
+
+void App::draw_overlay() {
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  glDisable(GL_DEPTH_TEST);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glColor4f(1.0, 1.0, 1.0, 0.5);
+
+  glBegin(GL_QUADS);
+  glVertex2f(0.8f, 0.1f);
+  glVertex2f(0.9f, 0.1f);
+  glVertex2f(0.9f, 0.2f);
+  glVertex2f(0.8f, 0.2f);
+  glEnd();
+}
+
+void App::redraw() {
+  int w, h;
+  SDL_GetWindowSizeInPixels(window, &w, &h);
+  mpv_opengl_fbo opengl_fbo = {
+      .fbo = 0,
+      .w = w,
+      .h = h,
+  };
+
+  mpv_render_param params[] = {
+      {MPV_RENDER_PARAM_OPENGL_FBO, &opengl_fbo},
+      {MPV_RENDER_PARAM_FLIP_Y, &mpv_true},
+      {MPV_RENDER_PARAM_INVALID, nullptr},
+  };
+
+  mpv_render_context_render(mpv_gl, params);
+  glViewport(0, 0, w, h);
+
+  draw_overlay();
+
+  SDL_GL_SwapWindow(window);
 }
 
 void App::on_mpv_events(void *ctx) {

@@ -12,6 +12,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(MPV REQUIRED IMPORTED_TARGET mpv)
 pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3)
 pkg_check_modules(SQLite3 REQUIRED IMPORTED_TARGET sqlite3)
+pkg_check_modules(OpenGL REQUIRED IMPORTED_TARGET opengl)
 
 add_executable(localtv
   src/main.cpp
@@ -30,5 +31,6 @@ add_executable(localtv_migration src/migrate.cpp src/db.cpp src/util.cpp)
 target_link_libraries(localtv PRIVATE PkgConfig::MPV)
 target_link_libraries(localtv PRIVATE PkgConfig::SDL3)
 target_link_libraries(localtv PRIVATE PkgConfig::SQLite3)
+target_link_libraries(localtv PRIVATE PkgConfig::OpenGL)
 target_link_libraries(localtv_setup PRIVATE PkgConfig::SQLite3)
 target_link_libraries(localtv_migration PRIVATE PkgConfig::SQLite3)
