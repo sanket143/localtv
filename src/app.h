@@ -32,7 +32,8 @@ public:
 
   // video options
   void play(std::string filepath);
-  void play_channel(int channel_id);
+  void play_channel();
+  void seek(int duration);
 
   // channel related helpers I guess?
   void load_channels();

@@ -4,7 +4,7 @@
 #include <print>
 
 void die(const char *msg) {
-  std::print(stderr, "%s\n", msg);
+  std::println(stderr, "{}", msg);
   exit(1);
 }
 

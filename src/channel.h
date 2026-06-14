@@ -1,15 +1,16 @@
 #include "db.h"
 #include "video.h"
+#include <tuple>
+#include <vector>
 
 class Channel {
 private:
-  DB *db;
-
-  Video *videos;
-
-public:
   int id;
 
+  std::vector<Video> videos;
+
+public:
   Channel(int id);
-  Video get_current_video();
+  std::tuple<Video, int> get_current_video();
+  void process_schedule(DB *db);
 };

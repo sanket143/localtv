@@ -23,18 +23,8 @@ int callback(void *data, int argc, char **argv, char **azColName) {
             // the query.
 }
 
-Video::Video(const char *video_id) {
-  // I know I should pass aruond a single reference, but
-  // I'll keep it like this for now
-  sqlite3_open("data.db", &conn);
-
-  char *errmsg = "";
-  int return_code =
-      sqlite3_exec(conn, "select * from video;", &callback, nullptr, &errmsg);
-
-  if (return_code > 0) {
-    std::println("Error running query: {}", errmsg);
-  }
-
-  sqlite3_free(errmsg);
+Video::Video() {}
+Video::Video(const char *video_id) {}
+std::string Video::url() {
+  return std::format("https://youtube.com/watch?v={}", id);
 }

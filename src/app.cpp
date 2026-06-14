@@ -2,8 +2,11 @@
 #include "mpv_helpers.h"
 #include "util.h"
 #include "video.h"
+#include <mpv/client.h>
 #include <print>
 #include <stdlib.h>
+#include <tuple>
+#include <unistd.h>
 
 App::App() : db("data.db"), current_channel(0) {
   mpv = mpv_create();
@@ -49,8 +52,7 @@ int App::loop() {
 
   case SDL_EVENT_KEY_DOWN:
     if (event.key.scancode == SDL_SCANCODE_RETURN) {
-      std::println("Here, trying to play, or get info");
-      Video video("jjp3WC8Unj8");
+      play_channel();
       // play("https://www.youtube.com/watch?v=jjp3WC8Unj8");
     }
 
@@ -100,7 +102,16 @@ int App::loop() {
 
 void App::play(std::string filepath) {
   const char *cmd[] = {"loadfile", filepath.data(), NULL};
-  mpv_command_async(mpv, 0, cmd);
+  mpv_command(mpv, cmd);
+}
+
+void App::seek(int duration) {
+  std::println("{}", duration);
+
+  std::string duration_str = std::to_string(duration);
+  const char *cmd[] = {"seek", duration_str.data(), "absolute", NULL};
+
+  mpv_command(mpv, cmd);
 }
 
 void App::on_mpv_events(void *ctx) {
@@ -132,7 +143,14 @@ void App::load_channels() {
 
 void App::next_channel() {}
 void App::prev_channel() {}
-void App::play_channel(int channel_id) {
+void App::play_channel() {
   // compute the next video, and play it
-  db.select("select * from schedule limit 1;", &default_callback);
+  channels[0].process_schedule(&db);
+  std::tuple<Video, int> play_info = channels[0].get_current_video();
+
+  Video video = std::get<0>(play_info);
+  int seek_duration = std::get<1>(play_info);
+
+  play(video.url());
+  seek(seek_duration);
 }
