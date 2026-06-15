@@ -26,7 +26,6 @@ App::App() : db("data.db"), current_channel(0) {
   mpv_render_context_set_update_callback(mpv_gl, on_mpv_render_update, NULL);
 
   load_channels();
-  // TODO: load all the channels here
 }
 
 App::~App() {

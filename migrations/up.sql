@@ -19,6 +19,8 @@ insert into channel(id, name) values (1, 'Respawn TV') on conflict (id) do nothi
 insert into channel(id, name) values (2, 'GlitchNet') on conflict (id) do nothing;
 insert into channel(id, name) values (3, 'Zero-G Games') on conflict (id) do nothing;
 insert into channel(id, name) values (4, 'Velocity X') on conflict (id) do nothing;
+insert into channel(id, name) values (5, 'NeoPrime') on conflict (id) do nothing;
+insert into channel(id, name) values (6, 'Zento Max') on conflict (id) do nothing;
 
 create table if not exists video (
     id varchar(100) not null,

@@ -9,6 +9,9 @@
 #include <print>
 #include <pugixml.hpp>
 #include <regex>
+#include <sstream>
+
+enum YT_TYPE { PLAYLIST, VIDEO };
 
 int add_video_details(std::string id, std::string title,
                       std::string description, int duration) {
@@ -49,8 +52,36 @@ std::string get_video_info(std::string url) {
   return root["id"].asString();
 }
 
+YT_TYPE get_type(std::string url) {
+  if (url.contains("playlist")) {
+    return PLAYLIST;
+  }
+
+  return VIDEO;
+}
+
+void add_videos_list_from_playlist(Channel *current_channel, std::string url) {
+  std::string cmd = std::format("yt-dlp --flat-playlist --get-url '{}'", url);
+  std::istringstream out(exec_cmd(cmd.data()));
+  std::regex re("^\\s+|\\s+$");
+
+  std::string s;
+
+  while (getline(out, s)) {
+    s = std::regex_replace(s, re, "");
+
+    if (s.length() > 0) {
+      if (s.size() > 0) {
+        std::string video_id = get_video_info(s);
+        add_to_schedule(current_channel->id, video_id);
+      }
+    }
+  }
+}
+
 void parse_videos() {
   std::ifstream f("videos.txt");
+  std::regex re("^\\s+|\\s+$");
 
   if (!f.is_open()) {
     die("failed to open the file");
@@ -60,15 +91,25 @@ void parse_videos() {
   Channel current_channel;
 
   while (getline(f, s)) {
+    s = std::regex_replace(s, re, "");
+
     if (s.length() > 0) {
       if (s[0] == '[') {
         current_channel =
             Channel::from_channel_name(s.substr(1, s.length() - 2));
 
-      } else {
-        std::string video_id = get_video_info(s);
-
-        add_to_schedule(current_channel.id, video_id);
+      } else if (s.size() > 0) {
+        switch (get_type(s)) {
+        case VIDEO: {
+          std::string video_id = get_video_info(s);
+          add_to_schedule(current_channel.id, video_id);
+          break;
+        }
+        case PLAYLIST: {
+          add_videos_list_from_playlist(&current_channel, s);
+          break;
+        }
+        }
       }
     }
   }
